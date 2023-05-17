@@ -1,0 +1,8 @@
+supplierOrderLineLinked=Order line linked
+noSupplierOrderLineLinked=No line linked
+linkOrderInvoiceSupplierBoxTitle=Supplier order line link
+supplierOrderLineLinkSuccess=Updated order/invoice link
+supplierOrderLineLinkError=An error has occured
+linkOrderInvoiceSupplierRightLabel=Suppliers: Order / Invoice line link
+supplierOrderLineLinkOld=Old order line ID: %s
+supplierOrderLineLinkNew=New order line ID: %s

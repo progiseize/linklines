@@ -1,0 +1,8 @@
+supplierOrderLineLinked=Ligne de commande liée
+noSupplierOrderLineLinked=Aucune ligne liée
+linkOrderInvoiceSupplierBoxTitle=Liaison ligne commande fournisseur
+supplierOrderLineLinkSuccess=Lien commande/facture modifié
+supplierOrderLineLinkError=Une  erreur est survenue
+linkOrderInvoiceSupplierRightLabel=Fournisseurs : Liaison ligne Commande / Facture 
+supplierOrderLineLinkOld=Ancien ID ligne commande: %s
+supplierOrderLineLinkNew=Nouvel ID ligne commande: %s
