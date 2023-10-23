@@ -62,16 +62,16 @@ class modLinkLines extends DolibarrModules
 		$this->name = preg_replace('/^mod/i', '', get_class($this));
 
 		// Module description
-		$this->description = "bdgt_moduleDesc";
+		$this->description = "linklinesDescription";
 		// Used only if file README.md and README-LL.md not found.
-		$this->descriptionlong = "bdgt_moduleDescLong";
+		$this->descriptionlong = "";
 
 		// Author
 		$this->editor_name = 'Progiseize';
 		$this->editor_url = 'https://progiseize.fr';
 
 		// Possible values for version are: 'development', 'experimental', 'dolibarr', 'dolibarr_deprecated', 'experimental_deprecated' or a version string like 'x.y.z'
-		$this->version = '0.1';
+		$this->version = '1.0';
 		// Url to the file with your last numberversion of this module
 		//$this->url_last_version = 'http://www.example.com/versionmodule.txt';
 
@@ -109,7 +109,7 @@ class modLinkLines extends DolibarrModules
 			// Set this to relative path of js file if module must load a js on all pages
 			'js' => array(),
 			// Set here all hooks context managed by module. To find available hook context, make a "grep -r '>initHooks(' *" on source code. You can also set hook context to 'all'
-			'hooks' => array('invoicesuppliercard'),
+			'hooks' => array('ordercard','invoicecard','invoicesuppliercard'),
 			// Set this to 1 if features of module are opened to external users
 			'moduleforexternal' => 0,
 		);
@@ -118,7 +118,7 @@ class modLinkLines extends DolibarrModules
 		$this->dirs = array("/linklines/temp");
 
 		// Config pages. Put here list of php page, stored into linklines/admin directory, to use to setup module.
-		$this->config_page_url = '';
+		$this->config_page_url = 'setup.php@linklines';
 
 		// Dependencies
 		// A condition to hide module
@@ -173,6 +173,25 @@ class modLinkLines extends DolibarrModules
 		$this->rights[$r][5] = 'link_ordertoinvoice'; // In php code, permission will be checked by test if ($user->rights->linklines->budget->myobject->read)
 		$r++;
 
+		$this->rights[$r][0] = $this->numero . sprintf("%02d", $r + 1); // Permission id (must not be already used)
+		$this->rights[$r][1] = 'linkPropalOrderCustomerRightLabel'; // Permission label
+		$this->rights[$r][4] = 'customer';
+		$this->rights[$r][5] = 'link_propaltoorder'; // In php code, permission will be checked by test if ($user->rights->linklines->budget->myobject->read)
+		$r++;
+
+		$this->rights[$r][0] = $this->numero . sprintf("%02d", $r + 1); // Permission id (must not be already used)
+		$this->rights[$r][1] = 'linkOrderInvoiceCustomerRightLabel'; // Permission label
+		$this->rights[$r][4] = 'customer';
+		$this->rights[$r][5] = 'link_ordertoinvoice'; // In php code, permission will be checked by test if ($user->rights->linklines->budget->myobject->read)
+		$r++;
+
+		$this->rights[$r][0] = $this->numero . sprintf("%02d", $r + 1); // Permission id (must not be already used)
+		$this->rights[$r][1] = 'setupLinkLines'; // Permission label
+		$this->rights[$r][4] = 'configurer';
+		$r++;
+
+		
+
 		// Main menu entries to add
 		$this->menu = array();
 		$r = 0;
@@ -196,14 +215,16 @@ class modLinkLines extends DolibarrModules
 
 		$langs->load('linklines@linklines');
 
-		/*$result = $this->_load_tables('/linklines/sql/');
-		if ($result < 0) {
-			return -1; // Do not activate module if error 'not allowed' returned when loading module SQL queries (the _load_table run sql with run_sql with the error allowed parameter set to 'default')
-		}*/
-		
-		// Create extrafields during init
+		// Extrafields
 		include_once DOL_DOCUMENT_ROOT.'/core/class/extrafields.class.php';
 		$extrafields = new ExtraFields($this->db);
+
+		// Customers
+		$extrafields->addExtraField('fk_propal_line','customerPropalLineLinked','int','100','10','commandedet',0,0,'','',$alwe = 1,'',0,0,'',$conf->entity,'linklines@linklines','$conf->linklines->enabled');
+		$extrafields->addExtraField('fk_propal_line','customerPropalLineLinked','int','100','10','facturedet',0,0,'','',$alwe = 1,'',0,0,'',$conf->entity,'linklines@linklines','$conf->linklines->enabled');
+		$extrafields->addExtraField('fk_order_line','customerOrderLineLinked','int','101','10','facturedet',0,0,'','',$alwe = 1,'',0,0,'',$conf->entity,'linklines@linklines','$conf->linklines->enabled');
+		
+		// Suppliers
 		$extrafields->addExtraField('fk_commande_fournisseur_line','supplierOrderLineLinked','int','100','10','facture_fourn_det',0,0,'','',$alwe = 1,'',0,0,'',$conf->entity,'linklines@linklines','$conf->linklines->enabled');
 
 		$sql = array();

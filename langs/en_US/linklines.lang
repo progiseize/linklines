@@ -1,8 +1,16 @@
 supplierOrderLineLinked=Order line linked
 noSupplierOrderLineLinked=No line linked
-linkOrderInvoiceSupplierBoxTitle=Supplier order line link
+linkSupplierOrderToInvoiceBoxTitle=Supplier order line link
 supplierOrderLineLinkSuccess=Updated order/invoice link
 supplierOrderLineLinkError=An error has occured
 linkOrderInvoiceSupplierRightLabel=Suppliers: Order / Invoice line link
 supplierOrderLineLinkOld=Old order line ID: %s
 supplierOrderLineLinkNew=New order line ID: %s
+linklinesDescription=Link lines elements
+customerPropalLineLinked=Linked proposal line
+customerOrderLineLinked=Order line linked
+setupLinkLinesCustomer=Customer links
+setupLinkLinesCustomerDesc=Activates line tracking on the customer journey (Proposal - Order - Invoice)
+setupLinkLinesSupplier=Supplier links
+setupLinkLinesSupplierDesc=Activates line tracking on the supplier route (Order - Invoice)
+setupLinkLines=Linklines Setup
