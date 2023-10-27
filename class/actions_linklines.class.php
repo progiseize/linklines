@@ -69,7 +69,9 @@ class ActionsLinkLines {
 
 		// ********************************************************
 		$active_customer = getDolGlobalInt('MAIN_MODULE_LINKLINES_CUSTOMERLINKS');
-		if($active_customer):
+		$view_customer = getDolGlobalInt('MAIN_MODULE_LINKLINES_CUSTOMERLINKS_VIEW');
+		//$user->rights->linklines->customer->read
+		if($active_customer && $view_customer):
 
 			// COMMANDES
 			if(in_array('ordercard', $contexts) && $action == 'editlinepropallinkconfirm' && GETPOST('token') == $_SESSION['token'] && GETPOST('confirm','alphanohtml') == 'yes'):
@@ -284,7 +286,8 @@ class ActionsLinkLines {
 
 		// ********************************************************
 		$active_customer = getDolGlobalInt('MAIN_MODULE_LINKLINES_CUSTOMERLINKS');
-		if($active_customer):
+		$view_customer = getDolGlobalInt('MAIN_MODULE_LINKLINES_CUSTOMERLINKS_VIEW');
+		if($active_customer && $view_customer):
 
 			// Commandes
 			if(in_array('ordercard', $contexts) && $action == 'editlinepropallink' && GETPOST('token') == $_SESSION['token']):	
@@ -426,7 +429,8 @@ class ActionsLinkLines {
 
 		// ********************************************************
 		$active_customer = getDolGlobalInt('MAIN_MODULE_LINKLINES_CUSTOMERLINKS');
-		if($active_customer):
+		$view_customer = getDolGlobalInt('MAIN_MODULE_LINKLINES_CUSTOMERLINKS_VIEW');
+		if($active_customer && $view_customer && $user->rights->linklines->customer->read):
 
 			// Commandes
 			if(in_array('ordercard', $contexts)):

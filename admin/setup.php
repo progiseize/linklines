@@ -12,7 +12,8 @@ if (! $res && file_exists("../../../main.inc.php")): $res=@include '../../../mai
 if ($user->socid > 0): accessforbidden(); endif;
 
 // Droits
-if (!$user->rights->linklines->configurer): accessforbidden(); endif;
+if (!$user->admin): accessforbidden(); endif;
+
 
 // ON CHARGE LES FICHIERS NECESSAIRES
 require_once DOL_DOCUMENT_ROOT.'/core/lib/admin.lib.php';
@@ -51,11 +52,19 @@ print load_fiche_titre($langs->trans("setupLinkLines"), $linkback, 'title_setup'
 	 			<td><?php echo $langs->trans('setupLinkLinesCustomerDesc'); ?></td>
 	 			<td class="right"><?php echo ajax_constantonoff('MAIN_MODULE_LINKLINES_CUSTOMERLINKS'); ?></td>
 	 		</tr>
+	 		<?php if(getDolGlobalInt('MAIN_MODULE_LINKLINES_CUSTOMERLINKS')): ?>
+	 			<tr class="dolpgs-tbody tbody-oddeven">
+		 			<td style="padding-left:24px;">- <?php echo $langs->trans('setupLinkLinesCustomerView'); ?></td>
+		 			<td><?php echo $langs->trans('setupLinkLinesCustomerViewDesc'); ?></td>
+		 			<td class="right"><?php echo ajax_constantonoff('MAIN_MODULE_LINKLINES_CUSTOMERLINKS_VIEW'); ?></td>
+		 		</tr>
+		 	<?php endif; ?>
 	 		<tr class="dolpgs-tbody tbody-oddeven">
 	 			<td><?php echo $langs->trans('setupLinkLinesSupplier'); ?></td>
 	 			<td><?php echo $langs->trans('setupLinkLinesSupplierDesc'); ?></td>
 	 			<td class="right"><?php echo ajax_constantonoff('MAIN_MODULE_LINKLINES_SUPPLIERLINKS'); ?></td>
 	 		</tr>
+
 	 	</tbody>
 	 </table>
 </div>

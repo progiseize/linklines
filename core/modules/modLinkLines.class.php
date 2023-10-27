@@ -166,11 +166,11 @@ class modLinkLines extends DolibarrModules
 		$this->rights = array();
 		$r = 0;
 
-		// Add here entries to declare new permissions		
+		/****************************************************/
 		$this->rights[$r][0] = $this->numero . sprintf("%02d", $r + 1); // Permission id (must not be already used)
-		$this->rights[$r][1] = 'linkOrderInvoiceSupplierRightLabel'; // Permission label
-		$this->rights[$r][4] = 'supplier';
-		$this->rights[$r][5] = 'link_ordertoinvoice'; // In php code, permission will be checked by test if ($user->rights->linklines->budget->myobject->read)
+		$this->rights[$r][1] = 'ViewCustomerRightLabel'; // Permission label
+		$this->rights[$r][4] = 'customer';
+		$this->rights[$r][5] = 'read'; // In php code, permission will be checked by test if ($user->rights->linklines->budget->myobject->read)
 		$r++;
 
 		$this->rights[$r][0] = $this->numero . sprintf("%02d", $r + 1); // Permission id (must not be already used)
@@ -183,21 +183,25 @@ class modLinkLines extends DolibarrModules
 		$this->rights[$r][1] = 'linkOrderInvoiceCustomerRightLabel'; // Permission label
 		$this->rights[$r][4] = 'customer';
 		$this->rights[$r][5] = 'link_ordertoinvoice'; // In php code, permission will be checked by test if ($user->rights->linklines->budget->myobject->read)
+		$r++;		
+
+		/****************************************************/
+		$this->rights[$r][0] = $this->numero . sprintf("%02d", $r + 1); // Permission id (must not be already used)
+		$this->rights[$r][1] = 'ViewSupplierRightLabel'; // Permission label
+		$this->rights[$r][4] = 'supplier';
+		$this->rights[$r][5] = 'read'; // In php code, permission will be checked by test if ($user->rights->linklines->budget->myobject->read)
 		$r++;
 
 		$this->rights[$r][0] = $this->numero . sprintf("%02d", $r + 1); // Permission id (must not be already used)
-		$this->rights[$r][1] = 'setupLinkLines'; // Permission label
-		$this->rights[$r][4] = 'configurer';
+		$this->rights[$r][1] = 'linkOrderInvoiceSupplierRightLabel'; // Permission label
+		$this->rights[$r][4] = 'supplier';
+		$this->rights[$r][5] = 'link_ordertoinvoice'; // In php code, permission will be checked by test if ($user->rights->linklines->budget->myobject->read)
 		$r++;
-
-		
 
 		// Main menu entries to add
 		$this->menu = array();
 		$r = 0;
 		// Add here entries to declare new menus
-		
-
 
 	}
 
