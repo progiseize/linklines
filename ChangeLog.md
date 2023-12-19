@@ -7,6 +7,7 @@
 ### 1.0.1
 * MAJ - Modification affichage des liens
 * MAJ - Icone module
+* MAJ - Ajout des liens sur lignes Remises (le hook printObjectLineDiscount doit être placé dans objectline_view.tpl.php)
 
 ### 1.0
 * (CUSTOMER) Afficher les liens sur les éléments
