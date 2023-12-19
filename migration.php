@@ -28,7 +28,7 @@ llxHeader('',$langs->trans('Migration'),'','','','',$array_js,$array_css);
 
 
 
-
+/*
 $sql = "SELECT rowid, ref_ext FROM ".MAIN_DB_PREFIX."facturedet";
 $sql.= " WHERE ref_ext LIKE 'COMLINEID_%'";
 $res = $db->query($sql);
@@ -54,7 +54,7 @@ while ($obj = $db->fetch_object($res)):
 endwhile;
 
 var_dump($res);
-
+*/
 
 ?>
 

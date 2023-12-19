@@ -71,7 +71,7 @@ class modLinkLines extends DolibarrModules
 		$this->editor_url = 'https://progiseize.fr';
 
 		// Possible values for version are: 'development', 'experimental', 'dolibarr', 'dolibarr_deprecated', 'experimental_deprecated' or a version string like 'x.y.z'
-		$this->version = '1.0.0';
+		$this->version = '1.0.1';
 		// Url to the file with your last numberversion of this module
 		$this->url_last_version = "https://progiseize.fr/modules_info/lastversion.php?module=".$this->numero;
 
@@ -82,7 +82,7 @@ class modLinkLines extends DolibarrModules
 		// If file is in theme/yourtheme/img directory under name object_pictovalue.png, use this->picto='pictovalue'
 		// If file is in module/img directory under name object_pictovalue.png, use this->picto='pictovalue@module'
 		// To use a supported fa-xxx css style of font awesome, use this->picto='xxx'
-		$this->picto = 'technic';
+		$this->picto = 'fa-link_fas_#6c6aa8';
 
 		// Define some features supported by module (triggers, login, substitutions, menus, css, etc...)
 		$this->module_parts = array(
