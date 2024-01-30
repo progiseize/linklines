@@ -70,7 +70,8 @@ class ActionsLinkLines {
 		// ********************************************************
 		$active_customer = getDolGlobalInt('MAIN_MODULE_LINKLINES_CUSTOMERLINKS');
 		$view_customer = getDolGlobalInt('MAIN_MODULE_LINKLINES_CUSTOMERLINKS_VIEW');
-		//$user->rights->linklines->customer->read
+		if($user->admin): $view_customer = 1; endif;
+
 		if($active_customer && $view_customer):
 
 			// COMMANDES
@@ -287,6 +288,8 @@ class ActionsLinkLines {
 		// ********************************************************
 		$active_customer = getDolGlobalInt('MAIN_MODULE_LINKLINES_CUSTOMERLINKS');
 		$view_customer = getDolGlobalInt('MAIN_MODULE_LINKLINES_CUSTOMERLINKS_VIEW');
+		if($user->admin): $view_customer = 1; endif;
+
 		if($active_customer && $view_customer):
 
 			// Commandes
@@ -430,6 +433,8 @@ class ActionsLinkLines {
 		// ********************************************************
 		$active_customer = getDolGlobalInt('MAIN_MODULE_LINKLINES_CUSTOMERLINKS');
 		$view_customer = getDolGlobalInt('MAIN_MODULE_LINKLINES_CUSTOMERLINKS_VIEW');
+		if($user->admin): $view_customer = 1; endif;
+
 		if($active_customer && $view_customer && $user->rights->linklines->customer->read):
 
 			// Commandes
@@ -462,7 +467,24 @@ class ActionsLinkLines {
 
 					// MODE VUE
 					else:
-						$this->resprints.= $langs->trans('customerPropalLineLinked').': ';
+
+						$show_customer_link = false;
+						if($order->statut > 0 && $user->rights->linklines->customer->link_propaltoorder):
+
+							$show_customer_link = true;
+
+							// STYLE LIEN
+							$this->resprints.= '<style>';
+								$this->resprints.= '.editlinelink {color:#25a580 !important;}';
+								$this->resprints.= '.addlinelink {color:#f88533 !important;}';
+							$this->resprints.= '</style>';
+
+							// LIEN
+							$editlink = $_SERVER['PHP_SELF'].'?id='.$order->id.'&action=editlinepropallink&lineid='.$object->id.'&token='.newtoken();
+
+						endif;
+
+						//$this->resprints.= $langs->trans('customerPropalLineLinked').': ';
 						if(!empty($object->array_options['options_fk_propal_line']) && $object->array_options['options_fk_propal_line'] > 0):
 
 							$propal_line = new PropaleLigne($this->db);
@@ -470,23 +492,26 @@ class ActionsLinkLines {
 
 							$propal = new Propal($this->db);
 							$propal->fetch($propal_line->fk_propal);
-
 							$prodlabel = $propal_line->fk_product?$propal_line->ref.' - '.$propal_line->product_label:$propal_line->desc;						
-							$this->resprints.= $propal->ref.' - '.$prodlabel.' ('.price($propal_line->total_ht).' '.$langs->getCurrencySymbol($conf->currency).') - ID: '.$propal_line->id;
+
+							$this->resprints.= '<div style="font-size:0.8em;color:#25a580;font-weight:bold;margin-top:6px;">';							
+							if($show_customer_link): $this->resprints.= '<a href="'.$editlink.'" class="editlinelink" >'; endif;
+							$this->resprints.= '<span class="fas fa-link" style="font-size:0.75em;color:#25a580;"></span> ';
+							$this->resprints.= $propal->ref.' - '.$prodlabel.' ('.price($propal_line->total_ht).' '.$langs->getCurrencySymbol($conf->currency).')';
+							if($user->admin): $this->resprints.= ' - Line ID: '.$propal_line->id; endif;
+							if($show_customer_link): $this->resprints.= '</a>'; endif;
+							$this->resprints.= '</div>';
+
 						else:
-							$this->resprints.= '<span class="colorgrey">'.$langs->trans('noSupplierOrderLineLinked').'</span>';
+							$this->resprints.= '<div style="font-size:0.8em;color:#f88533;font-weight:bold;margin-top:6px;">';
+							if($show_customer_link): $this->resprints.= '<a href="'.$editlink.'" class="addlinelink" >'; endif;
+							$this->resprints.= '<span class="fas fa-link" style="font-size:0.75em;color:#f88533;"></span> ';
+							$this->resprints.= ' '.$langs->trans('noCustomerPropalLineLinked');
+							if($show_customer_link): $this->resprints.= '</a>'; endif;
+							$this->resprints.= '</div>';
 						endif;
 
-						if($order->statut > 0 && $user->rights->linklines->customer->link_propaltoorder):
-							// STYLE LIEN
-							$this->resprints.= '<style>';
-								$this->resprints.= '.editlinelink {font-size:0.85em; color:#888 !important;}';
-								$this->resprints.= '.editlinelink:hover {color:rgb(10,20,100) !important;}';
-							$this->resprints.= '</style>';
-							// LIEN
-							$editlink = $_SERVER['PHP_SELF'].'?id='.$order->id.'&action=editlinepropallink&lineid='.$object->id.'&token='.newtoken();
-							$this->resprints.= ' <a href="'.$editlink.'" class="editlinelink" ><i class="fas fa-pencil-alt"></i></a>';
-						endif;
+						
 					endif;
 				endif;
 			endif;
@@ -522,46 +547,62 @@ class ActionsLinkLines {
 					// MODE VUE
 					else:
 
-						$parent_object = new Facture($this->db);
-						$parent_object->fetch($object->fk_facture);
+						// Check situation
+						$viewlink = true;
+						if($invoice->type == Facture::TYPE_SITUATION && !$invoice->is_last_in_cycle()): $viewlink = false; endif;
+						$show_customer_link = false;
+						if($invoice->statut > 0 && $user->rights->linklines->customer->link_ordertoinvoice && $viewlink):
 
-						$this->resprints.= $langs->trans('customerOrderLineLinked').': ';
+							$show_customer_link = true;
+
+							// STYLE LIEN
+							$this->resprints.= '<style>';
+								$this->resprints.= '.editlinelink {color:#25a580 !important;}';
+								$this->resprints.= '.addlinelink {color:#f88533 !important;}';
+							$this->resprints.= '</style>';
+
+							// LIEN
+							$editlink = $_SERVER['PHP_SELF'].'?facid='.$invoice->id.'&action=editlineorderlink&lineid='.$object->id.'&token='.newtoken();
+						endif;
+
+						//$this->resprints.= $langs->trans('customerOrderLineLinked').': ';
 						if(!empty($object->array_options['options_fk_order_line']) && $object->array_options['options_fk_order_line'] > 0):
 
 							$order_line = new OrderLine($this->db);
 							$order_line->fetch($object->array_options['options_fk_order_line']);
 
 							$order = new Commande($this->db);
-							$order->fetch($order_line->fk_propal);
-
+							$order->fetch($order_line->fk_commande);
 							$prodlabel = $order_line->fk_product?$order_line->ref.' - '.$order_line->product_label:$order_line->desc;						
-							$this->resprints.= $order->ref.' - '.$prodlabel.' ('.price($order_line->total_ht).' '.$langs->getCurrencySymbol($conf->currency).') - ID: '.$order_line->id;
+							
+							$this->resprints.= '<div style="font-size:0.8em;color:#25a580;font-weight:bold;margin-top:6px;">';							
+							if($show_customer_link): $this->resprints.= '<a href="'.$editlink.'" class="editlinelink" >'; endif;
+							$this->resprints.= '<span class="fas fa-link" style="font-size:0.75em;color:#25a580;"></span> ';
+							$this->resprints.= $order->ref.' - '.$prodlabel.' ('.price($order_line->total_ht).' '.$langs->getCurrencySymbol($conf->currency).')';
+							if($user->admin): $this->resprints.= ' - Line ID: '.$order_line->id; endif;
+							if($show_customer_link): $this->resprints.= '</a>'; endif;
+							$this->resprints.= '</div>';
+							
 						else:
-							$this->resprints.= '<span class="colorgrey">'.$langs->trans('noCustomerOrderLineLinked').'</span>';
+
+							$this->resprints.= '<div style="font-size:0.8em;color:#f88533;font-weight:bold;margin-top:6px;">';
+							if($show_customer_link): $this->resprints.= '<a href="'.$editlink.'" class="addlinelink" >'; endif;
+							$this->resprints.= '<span class="fas fa-link" style="font-size:0.75em;color:#f88533;"></span> ';
+							$this->resprints.= ' '.$langs->trans('noCustomerOrderLineLinked');
+							if($show_customer_link): $this->resprints.= '</a>'; endif;
+							$this->resprints.= '</div>';
+
 						endif;
 
-						// Check situation
-						$viewlink = true;
-						if($parent_object->type == Facture::TYPE_SITUATION && !$parent_object->is_last_in_cycle()): $viewlink = false; endif;
-
-						if($invoice->statut > 0 && $user->rights->linklines->customer->link_ordertoinvoice && $viewlink):
-							// STYLE LIEN
-							$this->resprints.= '<style>';
-								$this->resprints.= '.editlinelink {font-size:0.85em; color:#888 !important;}';
-								$this->resprints.= '.editlinelink:hover {color:rgb(10,20,100) !important;}';
-							$this->resprints.= '</style>';
-							// LIEN
-							$editlink = $_SERVER['PHP_SELF'].'?facid='.$invoice->id.'&action=editlineorderlink&lineid='.$object->id.'&token='.newtoken();
-							$this->resprints.= ' <a href="'.$editlink.'" class="editlinelink" ><i class="fas fa-pencil-alt"></i></a>';
-						endif;
+						
 					endif;
 				endif;
 			endif;
 		endif;
 
 		// ********************************************************
-		$active_supplier = getDolGlobalInt('MAIN_MODULE_LINKLINES_CUSTOMERLINKS');
-		if($active_supplier):
+		$active_supplier = getDolGlobalInt('MAIN_MODULE_LINKLINES_SUPPLIERLINKS');
+		if($active_supplier || $user->admin):
 			// Factures fournisseurs
 			if(in_array('invoicesuppliercard', $contexts)): //  /*&& $parameters['display_type'] == 'line'*/
 
@@ -581,7 +622,6 @@ class ActionsLinkLines {
 						$list_orderlines = array();
 						foreach($ff->linkedObjects['order_supplier'] as $orderfourn_id => $orderfourn): 
 							foreach($orderfourn->lines as $orderfournline):
-
 								$line_plabel = $orderfournline->fk_product?$orderfournline->ref.' - '.$orderfournline->product_label:$orderfournline->desc;
 								$list_orderlines[$orderfournline->id] = $orderfourn->ref.' - '.$line_plabel.' ('.price($orderfournline->total_ht).' '.$langs->getCurrencySymbol($conf->currency).') - ID: '.$orderfournline->id;
 							endforeach;
@@ -593,7 +633,24 @@ class ActionsLinkLines {
 
 					// MODE VUE
 					else:
-						$this->resprints.= $langs->trans('supplierOrderLineLinked').': ';
+
+						// Show link
+						$show_supplier_link = false;
+						if($ff->statut > 0 && $user->rights->linklines->supplier->link_ordertoinvoice):
+
+							$show_supplier_link = true;
+
+							// STYLE LIEN
+							$this->resprints.= '<style>';
+								$this->resprints.= '.editlinelink {color:#25a580 !important;}';
+								$this->resprints.= '.addlinelink {color:#f88533 !important;}';
+							$this->resprints.= '</style>';
+
+							// LIEN
+							$editlink = $_SERVER['PHP_SELF'].'?facid='.$ff->id.'&action=editlineorderlink&lineid='.$object->id.'&token='.newtoken();
+							
+						endif;
+
 						if(!empty($object->array_options['options_fk_commande_fournisseur_line']) && $object->array_options['options_fk_commande_fournisseur_line'] > 0):
 
 							$orderline = new CommandeFournisseurLigne($this->db);
@@ -601,26 +658,104 @@ class ActionsLinkLines {
 
 							$order = new CommandeFournisseur($this->db);
 							$order->fetch($orderline->fk_commande);
-
 							$prodlabel = $orderline->fk_product?$orderline->ref.' - '.$orderline->product_label:$orderline->desc;						
-							$this->resprints.= $order->ref.' - '.$prodlabel.' ('.price($orderline->total_ht).' '.$langs->getCurrencySymbol($conf->currency).') - ID: '.$orderline->id;
+							
+							$this->resprints.= '<div style="font-size:0.8em;color:#25a580;font-weight:bold;margin-top:6px;">';							
+							if($show_supplier_link): $this->resprints.= '<a href="'.$editlink.'" class="editlinelink" >'; endif;
+							$this->resprints.= '<span class="fas fa-link" style="font-size:0.75em;color:#25a580;"></span> ';
+							$this->resprints.= $order->ref.' - '.$prodlabel.' ('.price($orderline->total_ht).' '.$langs->getCurrencySymbol($conf->currency).')';
+							if($user->admin): $this->resprints.= ' - Line ID: '.$orderline->id; endif;
+							if($show_supplier_link): $this->resprints.= '</a>'; endif;
+							$this->resprints.= '</div>';
 						else:
-							$this->resprints.= '<span class="colorgrey">'.$langs->trans('noSupplierOrderLineLinked').'</span>';
+							$this->resprints.= '<div style="font-size:0.8em;color:#f88533;font-weight:bold;margin-top:6px;">';
+							if($show_supplier_link): $this->resprints.= '<a href="'.$editlink.'" class="addlinelink" >'; endif;
+							$this->resprints.= '<span class="fas fa-link" style="font-size:0.75em;color:#f88533;"></span> ';
+							$this->resprints.= ' '.$langs->trans('noSupplierOrderLineLinked');
+							if($show_supplier_link): $this->resprints.= '</a>'; endif;
+							$this->resprints.= '</div>';
 						endif;
 
-						if($ff->statut > 0 && $user->rights->linklines->supplier->link_ordertoinvoice):
-							// STYLE LIEN
-							$this->resprints.= '<style>';
-								$this->resprints.= '.editlinelink {font-size:0.85em; color:#888 !important;}';
-								$this->resprints.= '.editlinelink:hover {color:rgb(10,20,100) !important;}';
-							$this->resprints.= '</style>';
-							// LIEN
-							$editlink = $_SERVER['PHP_SELF'].'?facid='.$ff->id.'&action=editlineorderlink&lineid='.$object->id.'&token='.newtoken();
-							$this->resprints.= ' <a href="'.$editlink.'" class="editlinelink" ><i class="fas fa-pencil-alt"></i></a>';
-						endif;
+						/**/
 					endif;
 				endif;
 			endif;
+		endif;
+
+		return 0;
+	}
+
+	/**/
+	public function printObjectLineDiscount($parameters, &$object, &$action, $hookmanager){
+
+		global $langs, $user;
+
+		//
+		$langs->load('linklines@linklines');
+
+		//
+		$contexts = explode(':', $parameters['context']);
+
+		$active_customer = getDolGlobalInt('MAIN_MODULE_LINKLINES_CUSTOMERLINKS');
+		$view_customer = getDolGlobalInt('MAIN_MODULE_LINKLINES_CUSTOMERLINKS_VIEW');
+		if($user->admin): $view_customer = 1; endif;
+
+		// FACTURES
+		if(in_array('invoicecard', $contexts) && $active_customer && $view_customer):
+
+			//
+			$object->fetch_optionals();
+
+			$invoice = new Facture($this->db);
+			$invoice->fetch($object->fk_facture);
+
+			// On récupère les objets liés
+			$invoice->fetchObjectLinked();
+
+			// Si il y a des commandes liées
+			if(!empty($invoice->linkedObjects['commande'])):
+
+				// Check situation
+				$viewlink = true;
+				if($invoice->type == Facture::TYPE_SITUATION && !$invoice->is_last_in_cycle()): $viewlink = false; endif;
+				$show_customer_link = false;
+				if($invoice->statut > 0 && $user->rights->linklines->customer->link_ordertoinvoice && $viewlink):
+					$show_customer_link = true;
+					// STYLE LIEN
+					$this->resprints.= '<style>';
+						$this->resprints.= '.editlinelink {color:#25a580 !important;}';
+						$this->resprints.= '.addlinelink {color:#f88533 !important;}';
+					$this->resprints.= '</style>';
+					// LIEN
+					$editlink = $_SERVER['PHP_SELF'].'?facid='.$invoice->id.'&action=editlineorderlink&lineid='.$object->id.'&token='.newtoken();
+				endif;
+
+				if(!empty($object->array_options['options_fk_order_line']) && $object->array_options['options_fk_order_line'] > 0):
+					$order_line = new OrderLine($this->db);
+					$order_line->fetch($object->array_options['options_fk_order_line']);
+
+					$order = new Commande($this->db);
+					$order->fetch($order_line->fk_commande);
+					$prodlabel = $order_line->fk_product?$order_line->ref.' - '.$order_line->product_label:$order_line->desc;						
+					
+					$this->resprints.= '<div style="font-size:0.8em;color:#25a580;font-weight:bold;margin-top:6px;">';							
+					if($show_customer_link): $this->resprints.= '<a href="'.$editlink.'" class="editlinelink" >'; endif;
+					$this->resprints.= '<span class="fas fa-link" style="font-size:0.75em;color:#25a580;"></span> ';
+					$this->resprints.= $order->ref.' - '.$prodlabel.' ('.price($order_line->total_ht).' '.$langs->getCurrencySymbol($conf->currency).')';
+					if($user->admin): $this->resprints.= ' - Line ID: '.$order_line->id; endif;
+					if($show_customer_link): $this->resprints.= '</a>'; endif;
+					$this->resprints.= '</div>';
+				else:
+					$this->resprints.= '<div style="font-size:0.8em;color:#f88533;font-weight:bold;margin-top:6px;">';
+					if($show_customer_link): $this->resprints.= '<a href="'.$editlink.'" class="addlinelink" >'; endif;
+					$this->resprints.= '<span class="fas fa-link" style="font-size:0.75em;color:#f88533;"></span> ';
+					$this->resprints.= ' '.$langs->trans('noCustomerOrderLineLinked');
+					if($show_customer_link): $this->resprints.= '</a>'; endif;
+					$this->resprints.= '</div>';
+				endif;
+
+			endif;
+			return 1;
 		endif;
 
 		return 0;

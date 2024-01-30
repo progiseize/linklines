@@ -1,5 +1,5 @@
 supplierOrderLineLinked=Order line linked
-noSupplierOrderLineLinked=No line linked
+noSupplierOrderLineLinked=No order line linked
 linkSupplierOrderToInvoiceBoxTitle=Supplier order line link
 supplierOrderLineLinkSuccess=Updated order/invoice link
 supplierOrderLineLinkError=An error has occured
@@ -10,7 +10,9 @@ linklinesDescription=Link lines elements
 customerPropalLineLinked=Linked proposal line
 customerOrderLineLinked=Order line linked
 setupLinkLinesCustomer=Customer links
-setupLinkLinesCustomerDesc=Activates line tracking on the customer journey (Proposal - Order - Invoice)
+setupLinkLinesCustomerDesc=Activate line tracking on the customer journey (Proposal - Order - Invoice)
 setupLinkLinesSupplier=Supplier links
 setupLinkLinesSupplierDesc=Activates line tracking on the supplier route (Order - Invoice)
 setupLinkLines=Linklines Setup
+noCustomerOrderLineLinked=No order line linked
+noCustomerPropalLineLinked=No propal line linked
