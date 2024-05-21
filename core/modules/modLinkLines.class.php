@@ -64,7 +64,7 @@ class modLinkLines extends DolibarrModules
 		// Module description
 		$this->description = "linklinesDescription";
 		// Used only if file README.md and README-LL.md not found.
-		$this->descriptionlong = "";
+		$this->descriptionlong = "Ajoute un extrafield sur les lignes d'objets commerciaux (propales, commandes & factures) permettant d'enregistrer les liaisons entre les lignes. Ces liaisons sont faites automatiquement et sont modifiables sur chaque ligne.";
 
 		// Author
 		$this->editor_name = 'Progiseize';
