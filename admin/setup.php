@@ -34,7 +34,7 @@ $langs->load("linklines@linklines");
 * VIEW
 ********************************************************************/
 $array_js = array(); 
-$array_css = array('progilib/assets/css/dolpgs.css');
+$array_css = array('linklines/assets/css/dolpgs.css');
 llxHeader('',$langs->trans('setupLinkLines'),'','','','',$array_js,$array_css); 
 
 $linkback = '<a href="'.DOL_URL_ROOT.'/admin/modules.php?restore_lastsearch_values=1">'.$langs->trans("BackToModuleList").'</a>';
@@ -50,7 +50,7 @@ print load_fiche_titre($langs->trans("setupLinkLines"), $linkback, 'title_setup'
 	 		</tr>
 	 		<tr class="dolpgs-tbody tbody-oddeven">
 	 			<td colspan="2"><?php echo $langs->trans('setupLinkLinesCustomerDesc'); ?></td>
-	 			<td class="right"><?php echo ajax_constantonoff('MAIN_MODULE_LINKLINES_CUSTOMERLINKS'); ?></td>
+	 			<td class="right"><?php echo ajax_constantonoff('MAIN_MODULE_LINKLINES_CUSTOMERLINKS', array(), null, 0, 0, 1); ?></td>
 	 		</tr>
 	 		<?php if(getDolGlobalInt('MAIN_MODULE_LINKLINES_CUSTOMERLINKS')): ?>
 	 			<tr class="dolpgs-tbody tbody-oddeven">
@@ -64,7 +64,7 @@ print load_fiche_titre($langs->trans("setupLinkLines"), $linkback, 'title_setup'
 	 		</tr>
 	 		<tr class="dolpgs-tbody tbody-oddeven">
 	 			<td colspan="2"><?php echo $langs->trans('setupLinkLinesSupplierDesc'); ?></td>
-	 			<td class="right"><?php echo ajax_constantonoff('MAIN_MODULE_LINKLINES_SUPPLIERLINKS'); ?></td>
+	 			<td class="right"><?php echo ajax_constantonoff('MAIN_MODULE_LINKLINES_SUPPLIERLINKS', array(), null, 0, 0, 1); ?></td>
 	 		</tr>
 
 	 	</tbody>

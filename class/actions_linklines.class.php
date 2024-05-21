@@ -602,7 +602,8 @@ class ActionsLinkLines {
 
 		// ********************************************************
 		$active_supplier = getDolGlobalInt('MAIN_MODULE_LINKLINES_SUPPLIERLINKS');
-		if($active_supplier || $user->admin):
+		
+		if($active_supplier && $user->rights->linklines->supplier->read):
 			// Factures fournisseurs
 			if(in_array('invoicesuppliercard', $contexts)): //  /*&& $parameters['display_type'] == 'line'*/
 

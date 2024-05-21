@@ -1,8 +1,9 @@
-# LinkLines
+## LinkLines
 
-***
-
-### TODO for 1.1
+### 1.0.2
+* DEL - Suppression dépendance module Progilib
+* MAJ - Setup: Rechargement de la page après modification
+* FIX - Correction vue fournisseurs (droits)
 
 ### 1.0.1
 * MAJ - Modification affichage des liens
